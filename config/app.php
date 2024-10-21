@@ -15,7 +15,7 @@ return [
     |
     */
 
-    'name' => env('APP_NAME', 'Laravel'),
+    'name' => env('PABLO', 'facturador'),
 
     /*
     |--------------------------------------------------------------------------
@@ -155,6 +155,7 @@ return [
     */
 
     'providers' => [
+        
 
         /*
          * Laravel Framework Service Providers...
@@ -210,8 +211,9 @@ return [
     |
     */
 
-    'aliases' => Facade::defaultAliases()->merge([
+    'aliases' => Facade::defaultAliases()->merge(items: [
         // 'ExampleClass' => App\Example\ExampleClass::class,
+        
     ])->toArray(),
 
 ];

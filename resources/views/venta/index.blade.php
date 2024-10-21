@@ -73,20 +73,22 @@
                         <td>
                             {{$item->total}}
                         </td>
-                        <td>
+                        <td> 
                             <div class="btn-group" role="group" aria-label="Basic mixed styles example">
+                                @foreach($ventas as $venta)
+                                    <a href="{{ route('generar.boleta', $venta->id) }}" class="btn btn-primary">Generar Boleta</a>
+                                @endforeach
 
                                 @can('mostrar-venta')
-                                <form action="{{route('ventas.show', ['venta'=>$item]) }}" method="get">
-                                    <button type="submit" class="btn btn-success">
-                                        Ver
-                                    </button>
-                                </form>
+                                    <form action="{{route('ventas.show', ['venta'=>$item]) }}" method="get">
+                                    <button type="submit" class="btn btn-success">Ver</button>
+                                    </form>
                                 @endcan
 
                                 @can('eliminar-venta')
-                                <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#confirmModal-{{$item->id}}">Eliminar</button>
-                                @endcan
+                                    <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#confirmModal-{{$item->id}}">Eliminar</button>
+                                @endcan 
+
                             </div>
                         </td>
                     </tr>
