@@ -95,6 +95,18 @@ class ProductoController extends Controller
         return redirect()->route('productos.index')->with('success', 'Producto registrado');
     }
 
+    public function updateStock(int $productoId, int $cantidad)
+{
+    try {
+        $producto = Producto::findOrFail($productoId);
+        $producto->increment('stock', $cantidad);
+
+        return response()->json(['success' => true, 'message' => 'Stock actualizado exitosamente']);
+    } catch (Exception $e) {
+        return response()->json(['success' => false, 'message' => 'Error al actualizar el stock: ' . $e->getMessage()]);
+    }
+}
+
     /**
      * Display the specified resource.
      */
@@ -130,7 +142,7 @@ class ProductoController extends Controller
      * Update the specified resource in storage.
      */
     public function update(UpdateProductoRequest $request, Producto $producto)
-    {
+    /**{
         try{
             DB::beginTransaction();
 
@@ -168,7 +180,54 @@ class ProductoController extends Controller
         }
 
         return redirect()->route('productos.index')->with('success','Producto editado');
+    }*/
+    
+    {
+    try {
+        DB::beginTransaction();
+
+        // Manejo de imagen
+        if ($request->hasFile('img_path')) {
+            $name = $producto->handleUploadImage($request->file('img_path'));
+
+            // Eliminar si existe una imagen previa
+            if (Storage::disk('public')->exists('productos/' . $producto->img_path)) {
+                Storage::disk('public')->delete('productos/' . $producto->img_path);
+            }
+        } else {
+            $name = $producto->img_path;
+        }
+
+        // Actualizar campos de producto
+        $producto->fill([
+            'codigo' => $request->codigo,
+            'nombre' => $request->nombre,
+            'descripcion' => $request->descripcion,
+            'fecha_vencimiento' => $request->fecha_vencimiento,
+            'img_path' => $name,
+            'marca_id' => $request->marca_id,
+            'presentacione_id' => $request->presentacione_id
+        ]);
+
+        $producto->save();
+
+        // Actualizar categorías de producto
+        $categorias = $request->get('categorias');
+        $producto->categorias()->sync($categorias);
+
+        // Actualizar stock si se ingresó una cantidad
+        if ($request->filled('cantidad')) {
+            $cantidad = intval($request->input('cantidad'));
+            $this->updateStock($producto->id, $cantidad);
+        }
+
+        DB::commit();
+    } catch (Exception $e) {
+        DB::rollBack();
     }
+
+    return redirect()->route('productos.index')->with('success', 'Producto editado');
+}
 
     /**
      * Remove the specified resource from storage.

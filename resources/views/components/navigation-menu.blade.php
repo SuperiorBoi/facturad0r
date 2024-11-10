@@ -56,7 +56,7 @@
                 <div class="sb-sidenav-menu-heading">Modulos</div>
 
                 <!----Compras---->
-                @can('ver-compra')
+                <!----@can('ver-compra')
                 <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseCompras" aria-expanded="false" aria-controls="collapseLayouts">
                     <div class="sb-nav-link-icon"><i class="fa-solid fa-store"></i></div>
                     Compras
@@ -72,7 +72,7 @@
                         @endcan
                     </nav>
                 </div>
-                @endcan
+                @endcan---->
 
                 <!----Ventas---->
                 @can('ver-venta')

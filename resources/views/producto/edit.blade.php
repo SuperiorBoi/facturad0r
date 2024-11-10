@@ -107,6 +107,13 @@
                         @enderror
                     </div>
 
+                    <!---la parte de compra--->
+                    <!-----Cantidad---->
+                    <div class="col-sm-4 mb-2">
+                    <label for="cantidad" class="form-label">Cantidad:</label>
+                    <input type="number" name="cantidad" id="cantidad" class="form-control">
+                    </div>
+
                     <!---Categorías---->
                     <div class="col-md-6">
                         <label for="categorias" class="form-label">Categorías:</label>

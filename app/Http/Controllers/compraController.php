@@ -51,7 +51,7 @@ class compraController extends Controller
      * Store a newly created resource in storage.
      */
     public function store(StoreCompraRequest $request)
-    {
+    /**{
         try{
             DB::beginTransaction();
 
@@ -98,7 +98,47 @@ class compraController extends Controller
         }
 
         return redirect()->route('compras.index')->with('success','compra exitosa');
+    }*/
+    {
+    try {
+        DB::beginTransaction();
+
+        // Llenar la tabla de compras
+        $compra = Compra::create($request->validated());
+
+        // Obtener los arrays con la información de los productos
+        $arrayProducto_id = $request->get('arrayidproducto');
+        $arrayCantidad = $request->get('arraycantidad');
+        $arrayPrecioCompra = $request->get('arraypreciocompra');
+        $arrayPrecioVenta = $request->get('arrayprecioventa');
+
+        // Recorrer los productos y procesarlos
+        foreach ($arrayProducto_id as $index => $productoId) {
+            $cantidad = intval($arrayCantidad[$index]);
+
+            // Asociar productos con la compra
+            $compra->productos()->syncWithoutDetaching([
+                $productoId => [
+                    'cantidad' => $cantidad,
+                    'precio_compra' => $arrayPrecioCompra[$index],
+                    'precio_venta' => $arrayPrecioVenta[$index]
+                ]
+            ]);
+
+            // Llama al método updateStock en ProductoController para actualizar el stock
+            $productoController = new ProductoController();
+            $productoController->updateStock($productoId, $cantidad);
+        }
+
+        DB::commit();
+
+        return redirect()->route('compras.index')->with('success', 'Compra registrada y stock actualizado.');
+    } catch (Exception $e) {
+        DB::rollBack();
+        return redirect()->back()->withErrors(['error' => 'Error en la compra: ' . $e->getMessage()]);
     }
+}
+    
 
     /**
      * Display the specified resource.

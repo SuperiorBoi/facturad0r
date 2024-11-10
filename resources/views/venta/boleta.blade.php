@@ -4,7 +4,7 @@
     <title>Boleta</title>
 </head>
 <body>
-    <h1>Boleta de Venta</h1>
+    <h1>RECIBO de Venta</h1>
     <p>Número de Boleta: {{ $venta->id }}</p>
     <table>
         <thead>

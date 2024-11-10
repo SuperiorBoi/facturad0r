@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Models\Venta;
-use Mpdf\Mpdf;
+use Mpdf as pdf;
 
 
 class BoletaController extends Controller
@@ -13,11 +13,11 @@ class BoletaController extends Controller
     {
         $venta = Venta::findOrFail($ventaId);
 
-        $mpdf = new Mpdf();
+        $mpdf = new \Barryvdh\DomPDF\Facade\Pdf();
 
         $html = view('boleta', compact('venta'))->render();
         $mpdf->WriteHTML($html);
-        $mpdf->Output('boleta_' . $venta->id . '.pdf', 'D'); 
+        $mpdf->Output("boleta_{$venta->id}.pdf", 'D'); 
     }
 }
 
